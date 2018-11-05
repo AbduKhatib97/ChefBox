@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ChefBox.Cooking.Dto\ChefBox.Cooking.Dto.csproj" />
+    <ProjectReference Include="..\ChefBox.Cooking.IData\ChefBox.Cooking.IData.csproj" />
+    <ProjectReference Include="..\ChefBox.Model\ChefBox.Model.csproj" />
+    <ProjectReference Include="..\ChefBox.SqlServer\ChefBox.SqlServer.csproj" />
+  </ItemGroup>
+
+</Project>

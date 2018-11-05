@@ -1,0 +1,94 @@
+﻿@using ChefBox.AdminUI.ViewModels.Recipe
+@using ChefBox.AdminUI.Extensions
+@model RecipesTableViewModel
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form class="float-right" asp-controller="Recipes" asp-action="Index" method="get">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="input-group">
+                                <input class="form-control" id="query" name="query" type="text" placeholder="Search..." />
+                                <button class="btn btn-defualt waves-effect waves-light">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <a class="btn btn-primary float-right"
+                           asp-controller="Recipes" asp-action="RecipeForm">
+                            <i class="fas fa-plus"></i>
+                            New recipe
+                        </a>
+                    </div>
+                </form>
+                <h4 class="card-title">Recipes</h4>
+                <h6 class="card-subtitle">Show all recipies</h6>
+                <div class="table-responsive">
+                    @{
+                        if (Model is null)
+                        {
+                            <div>
+                                <h3>There is No Ingredients Yet.</h3>
+                            </div>
+                        }
+                        else
+                        {
+                            <table class="table">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th scope="col">
+                                            <input id="CheckAll" type="checkbox" />
+                                        </th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Category</th>
+                                        <th scope="col">Type</th>
+                                        <th scope="col">Options</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var recipe in Model.Recipes)
+                                    {
+                                        <tr id="@recipe.Recipe.Id">
+                                            <td scope="col">
+                                                <input id="Checkbox1" type="checkbox" />
+                                            </td>
+                                            <td>@recipe.Recipe.Name</td>
+                                            <td>@recipe.Recipe.CategoryName</td>
+                                            <td>@recipe.Recipe.RecipeType</td>
+                                            <td class="button-group">
+                                                <button class="btn waves-effect waves-light btn-circle btn-primary"
+                                                        data-toggle="popover"
+                                                        title="Ingredients"
+                                                        data-html="true"
+                                                        data-content="@recipe.Ingredients.ToUl()"
+                                                        data-placement="left">
+                                                    <i class="fa fa-eye"></i>
+                                                </button>
+                                                <a class="btn waves-effect waves-light btn-circle btn-info"
+                                                   href="#">
+                                                    <i class="fa fa-box-open"></i>
+                                                </a>
+                                                <a class="btn waves-effect waves-light btn-circle btn-info"
+                                                   href="~/Recipes/RecipeForm/@(recipe.Recipe.Id)">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+                                                <a href="#" class="btn waves-effect waves-light btn-circle btn-danger">
+                                                    <i class="fa fa-window-close"></i>
+                                                </a>
+                                            </td>
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                        }
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,43 @@
+﻿@using ChefBox.AdminUI.ViewModels.Ingredient
+@model IngredientFormViewModel
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Ingredient Form</h4>
+                <form asp-controller="Ingredients" asp-action="SaveForm" method="post">
+                    <div class="row hide">
+                        <div class="col-md-12 form-group">
+                            <label asp-for="Ingredient.Id"></label>
+                            <input asp-for="Ingredient.Id" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 form-group">
+                            <label asp-for="Ingredient.Name"></label>
+                            <input asp-for="Ingredient.Name" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 form-group">
+                            <label asp-for="Ingredient.Description"></label>
+                            <textarea asp-for="Ingredient.Description"
+                                      class="form-control" rows="5">
+                            </textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 form-group">
+                            <label asp-for="Ingredient.IngredientType"></label>
+                            <select asp-for="Ingredient.IngredientType" asp-items="Html.GetEnumSelectList<IngredientType>()" class="form-control"></select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary float-right">Save</button>
+                    <a asp-controller="Ingredients" asp-action="Index" class="btn btn-default float-right mx-2">Cancel</a>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

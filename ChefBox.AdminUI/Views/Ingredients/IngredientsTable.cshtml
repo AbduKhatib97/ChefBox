@@ -1,0 +1,85 @@
+﻿@using ChefBox.AdminUI.ViewModels.Ingredient;
+@model IngredientsTableViewModel
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form class="float-right" asp-controller="Ingredients" asp-action="Index" method="get">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="input-group">
+                                <input class="form-control" id="query" name="query" type="text" placeholder="Search..." />
+                                <button class="btn btn-defualt waves-effect waves-light">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <a class="btn btn-primary" asp-controller="Ingredients" asp-action="IngredientForm">
+                                <i class="fas fa-plus"></i>
+                                New ingredient
+                            </a>
+                        </div>
+
+                    </div>
+                </form>
+                <h4 class="card-title">Ingredients</h4>
+                <h6 class="card-subtitle">Show all ingredients for all recipies</h6>
+                <div class="table-responsive">
+                    @{
+                        if (Model is null)
+                        {
+                            <div>
+                                <h3>There is No Ingredients Yet.</h3>
+                            </div>
+                        }
+                        else
+                        {
+                            <table class="table">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th scope="col">
+                                            <input class="form-control" id="CheckAll" type="checkbox" />
+                                        </th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col">Type</th>
+                                        <th scope="col">Recipes</th>
+                                        <th scope="col">Options</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var ingredientDetail in Model.IngredientDetails)
+                                    {
+                                        <tr id="@ingredientDetail.Ingredient.Id">
+                                            <td scope="col">
+                                                <input class="form-control" id="Checkbox1" type="checkbox" />
+                                            </td>
+                                            <td>@ingredientDetail.Ingredient.Name</td>
+                                            <td>@ingredientDetail.Ingredient.Description</td>
+                                            <td>@ingredientDetail.Ingredient.IngredientType</td>
+                                            <td>@ingredientDetail.RecipesCount</td>
+                                            <td>
+                                                <a class="btn waves-effect waves-light btn-circle btn-info"
+                                                   href="~/Ingredients/IngredientForm/@(ingredientDetail.Ingredient.Id)">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+                                                <a href="#" class="btn waves-effect waves-light btn-circle btn-danger">
+                                                    <i class="fa fa-window-close"></i>
+                                                </a>
+                                            </td>
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                        }
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
