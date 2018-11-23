@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,8 +27,6 @@ namespace ChefBox.AdminUI.Controllers
 
             var vmResults = dtoResults.Select(dto => new RecipeDetailsViewModel()
             {
-                Recipe = new RecipeViewModel()
-                {
                     Id = dto.Id,
                     Name = dto.Name,
                     Description = dto.Description,
