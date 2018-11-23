@@ -1,196 +1,150 @@
-﻿//using ChefBox.Cooking.Data.Repositories.Base;
-//using ChefBox.Cooking.Dto.Photo;
-//using ChefBox.Cooking.Dto.Recipe;
-//using ChefBox.Cooking.IData.Interfaces;
-//using ChefBox.Model.Cooking;
-//using ChefBox.SqlServer.Database;
-//using Microsoft.EntityFrameworkCore;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
+﻿using ChefBox.Cooking.Data.Repositories.Base;
+using ChefBox.Cooking.Dto.Photo;
+using ChefBox.Cooking.Dto.Recipe;
+using ChefBox.Cooking.IData.Interfaces;
+using ChefBox.Model.Cooking;
+using ChefBox.SqlServer.Database;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-//namespace ChefBox.Cooking.Data.Repositories
-//{
-//    public class PhotoRepository : BaseRepository, IPhotoRepository
-//    {
-//        public PhotoRepository(ChefBoxDbContext context) : base(context)
-//        {
-//            Context = context;
-//        }
+namespace ChefBox.Cooking.Data.Repositories
+{
+    public class PhotoRepository : BaseCookingRepository<Photo,int>, IPhotoRepository
+    {
+        public PhotoRepository(ChefBoxDbContext context) : base(context)
+        {
+        }
 
-//        #region IPhotoRepository Implementation
+        public PhotoDto ActionPhoto(PhotoDto photoDto)
+        {
+            try
+            {
+                var photoEntity = GetSingleOrDefaultBaseEntity(photoDto.Id, isValid: true);
+                EntityState entityState = EntityState.Modified;
+                if (photoEntity is null)
+                {
+                    photoEntity = new Photo()
+                    {
+                        Name = photoDto.Name,
+                        Url = photoDto.Url,
+                        RecipeId = photoDto.RecipeId,
+                    };
+                    entityState = EntityState.Added;
+                } // Add case
+                else
+                {
+                    photoEntity.Name = photoDto.Name;
+                    photoEntity.Url = photoDto.Url;
+                    photoEntity.RecipeId = photoDto.RecipeId;
+                } // Update case
+                Context.Entry(photoEntity).State = entityState;
+                Context.SaveChanges();
+                photoDto.Id = photoEntity.Id;
+                return photoDto;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
 
-//        public PhotoDto ActionPhoto(PhotoDto photoDto)
-//        {
-//            try
-//            {
-//                var photoEntity = GetSingleOrDefaultBaseEntity<Photo>(photoDto.Id, isValid: true);
-//                EntityState entityState = EntityState.Modified;
-//                if (photoEntity == null)
-//                {
-//                    photoEntity = new Photo()
-//                    {
-//                        Description = photoDto.Description,
-//                        Url = photoDto.Url,
-//                        RecipeId = photoDto.RecipeId
-//                    };
-//                    entityState = EntityState.Added;
-//                } // Add case
-//                else
-//                {
-//                    photoEntity.Description = photoDto.Description;
-//                    photoEntity.Url = photoDto.Url;
-//                    photoEntity.RecipeId = photoDto.RecipeId;
-//                } // Update case
-//                Context.Entry(photoEntity).State = entityState;
-//                Context.SaveChanges();
-//                photoDto.Id = photoEntity.Id;
-//                return photoDto;
-//            }
-//            catch (Exception)
-//            {
-//                return null;
-//            }
-//        } // Done
+        public IEnumerable<PhotoDto> GetAllPhotos(string query = "")
+        {
+            var Query = string.IsNullOrEmpty(query) ? null : query.ToUpper();
 
-//        public IEnumerable<PhotoDto> GetAllPhotos(string query = null)
-//        {
-//            var Query = string.IsNullOrEmpty(query) ? null : query.ToUpper();
+            var results = Context.Photos
+                                 .Include(ph => ph.Recipe)
+                                 .Where(ph =>
+                                            ph.IsValid
+                                            &&
+                                            (
+                                                string.IsNullOrEmpty(Query)
+                                                ||
+                                                ph.Name.ToUpper().Contains(Query)
+                                            )
+                                       ).AsEnumerable();
 
-//            var results = Context.Photos
-//                                 .Where(ph =>
-//                                            ph.IsValid
-//                                            &&
-//                                            (
-//                                                string.IsNullOrEmpty(Query)
-//                                                ||
-//                                                ph.Description.ToUpper().Contains(Query)
-//                                            )
-//                                       )
-//                                 .Select(ph => new PhotoDto()
-//                                 {
-//                                     Id = ph.Id,
-//                                     Description = ph.Description,
-//                                     Url = ph.Url,
-//                                     RecipeId = ph.RecipeId,
-//                                 }).ToList();
-//            return results;
-//        } // Done
+            var dtoResults = results.Select(ph => new PhotoDto()
+                                     {
+                                         Id = ph.Id,
+                                         Name = ph.Name,
+                                         Url = ph.Url,
+                                         RecipeId = ph.RecipeId,
+                                         RecipeName = ph.Recipe.Name,
+                                     });
+            return dtoResults;
+        }
 
-//        public PhotoDto GetPhoto(int id)
-//        {
-//            var photoEntity = GetSingleOrDefaultBaseEntity<Photo>(id, isValid: true);
-//            var result = photoEntity is null ? null : new PhotoDto()
-//            {
-//                Id = photoEntity.Id,
-//                Description = photoEntity.Description,
-//                Url = photoEntity.Url,
-//                RecipeId = photoEntity.RecipeId,
-//            };
-//            return result;
-//        } // Done
+        public PhotoDto GetPhoto(int id)
+        {
+            var result = GetSingleOrDefaultBaseEntity(id, isValid: true);
+            var recipeName = GetRecipeName(id);
 
-//        public PhotoDto GetPhoto(string url)
-//        {
-//            var photoEntity = Context.Photos.SingleOrDefault(r => r.Url == url && r.IsValid);
-//            var result = photoEntity is null ? null : new PhotoDto()
-//            {
-//                Id = photoEntity.Id,
-//                Description = photoEntity.Description,
-//                Url = photoEntity.Url,
-//                RecipeId = photoEntity.RecipeId,
-//            };
-//            return result;
-//        } // Done
+            var dtoResult = result is null ? null : new PhotoDto()
+            {
+                Id = result.Id,
+                Name = result.Name,
+                Url = result.Url,
+                RecipeId = result.RecipeId,
+                RecipeName = recipeName,
+            };
+            return dtoResult;
+        }
 
-//        public RecipeFormDto GetRecipe(int photoId)
-//        {
-//            var photoEntity = GetSingleOrDefaultBaseEntity<Photo>(photoId, isValid: true);
-//            var result = photoEntity is null ? null : (new RecipeRepository(Context)).GetRecipe(photoEntity.RecipeId);
-//            return result;
-//        } // Done
+        public PhotoDto GetPhoto(string url)
+        {
+            var result = Context.Photos.SingleOrDefault(r => r.Url == url && r.IsValid);
+            var recipeName = GetRecipeName(result.Id);
 
-//        public bool RemovePhoto(int id)
-//        {
-//            try
-//            {
-//                var photoEntity = GetSingleOrDefaultBaseEntity<Photo>(id, isValid: true);
-//                if (photoEntity != null)
-//                {
-//                    photoEntity.IsValid = false;
-//                    Context.Update(photoEntity);
-//                    Context.SaveChanges();
-//                }
-//                return true;
-//            }
-//            catch (Exception)
-//            {
-//                return false;
-//            }
-//        } // Done
+            var dtoResult = result is null ? null : new PhotoDto()
+            {
+                Id = result.Id,
+                Name = result.Name,
+                Url = result.Url,
+                RecipeId = result.RecipeId,
+                RecipeName = recipeName,
+            };
+            return dtoResult;
+        }
 
-//        public bool RemovePhotoPermanently(int id)
-//        {
-//            try
-//            {
-//                var photoEntity = GetSingleOrDefaultBaseEntity<Photo>(id, isValid: true);
-//                if (photoEntity != null)
-//                {
-//                    Context.Entry(photoEntity).State = EntityState.Deleted;
-//                    Context.SaveChanges();
-//                }
-//                return true;
-//            }
-//            catch (Exception)
-//            {
-//                return false;
-//            }
-//        } // Done
+        public RecipeDto GetRecipe(int photoId)
+        {
+            var result = GetSingleOrDefaultBaseEntity(photoId, isValid: true);
+            var dtoResult = result is null ? null : new RecipeRepository(Context).GetRecipe(result.RecipeId);
+            return dtoResult;
+        }
 
-//        public bool RemoveRangePhotos(params int[] ids)
-//        {
-//            try
-//            {
-//                foreach (var id in ids)
-//                {
-//                    var isDeleted = RemovePhoto(id);
-//                    if (!isDeleted)
-//                    {
-//                        throw new Exception();
-//                    }
+        public string GetRecipeName(int photoId)
+        {
+            var result = Context.Photos
+                                .Include(ph => ph.Recipe)
+                                .SingleOrDefault(ph => ph.IsValid && ph.Id == photoId)
+                                .Recipe.Name;
+            return result;
+        }
 
-//                }
-//                return true;
-//            }
-//            catch (Exception)
-//            {
-//                return false;
-//            }
-//        } // Done
+        public bool RemovePhoto(int id)
+        {
+            return base.Remove(id);
+        }
 
-//        public bool RemoveRangePhotosPermanently(params int[] ids)
-//        {
-//            try
-//            {
-//                foreach (var id in ids)
-//                {
-//                    var isDeleted = RemovePhotoPermanently(id);
-//                    if (!isDeleted)
-//                    {
-//                        throw new Exception();
-//                    }
+        public bool RemovePhotoPermanently(int id)
+        {
+            return base.RemovePermanently(id);
+        }
 
-//                }
-//                return true;
-//            }
-//            catch (Exception)
-//            {
-//                return false;
-//            }
-//        } // Done
+        public bool[] RemoveRangePhotos(params int[] ids)
+        {
+            return base.RemoveRange(ids);
+        }
+
+        public bool[] RemoveRangePhotosPermanently(params int[] ids)
+        {
+            return base.RemoveRangePermanently(ids);
+        }
 
 
-//        #endregion
-//    }
-//}
+    }
+}

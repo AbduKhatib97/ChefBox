@@ -1,0 +1,49 @@
+﻿@using ChefBox.AdminUI.ViewModels.Recipe
+@model RecipeCardViewModel
+
+@{
+    string coverUrl = Model.Photo is null ? @"/images/img4.jpg" : @Model.Photo.Url;
+    string publishClasses = Model.IsPublished ? "text-success fas fa-eye" : "text-danger fas fa-eye-slash";
+}
+
+<div class="card shadow">
+    <img class="card-img-top img-responsive" src="@coverUrl" alt="Card image cap">
+    <div class="card-body">
+        <div class="d-flex no-block align-items-center m-b-15">
+            <span><i class="ti-calendar"></i> @Model.CreationDate.ToShortDateString()</span>
+            <div class="ml-auto">
+                <h5 class="font-normal">@Model.CategoryName</h5>
+            </div>
+        </div>
+        <h3 class="font-normal">@Model.Name</h3>
+        <p class="m-b-0 m-t-10">
+            @if (Model.Description.Length < 200)
+            {
+                @: @Model.Description
+            }
+            else
+            {
+                @: @Model.Description.Substring(0, 200) . . .
+            }
+        </p>
+
+        <a class="btn btn-outline-primary btn-rounded waves-effect waves-light m-t-20"
+           asp-controller="Recipes"
+           asp-action="RecipeDetails"
+           asp-route-id="@(Model.Id)">
+            Read More
+        </a>
+
+        <a class="btn waves-effect waves-light m-t-20 float-right"
+           asp-controller="Recipes"
+           asp-action="RecipeForm"
+           asp-route-id="@(Model.Id)">
+            <i class="text-warning fas fa-edit"></i>
+        </a>
+
+        <a href="#" class="btn waves-effect waves-light m-t-20 float-right"><i class="@publishClasses"></i></a>
+
+        <a href="#" class="btn waves-effect waves-light m-t-20 float-right"><i class="fas fa-download"></i></a>
+
+    </div>
+</div>

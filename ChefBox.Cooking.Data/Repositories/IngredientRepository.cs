@@ -1,4 +1,5 @@
-﻿using ChefBox.Cooking.Dto.Ingredient;
+﻿using ChefBox.Cooking.Data.Repositories.Base;
+using ChefBox.Cooking.Dto.Ingredient;
 using ChefBox.Cooking.Dto.Recipe;
 using ChefBox.Cooking.IData.Interfaces;
 using ChefBox.Model.Cooking;
@@ -7,11 +8,10 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace ChefBox.Cooking.Data.Repositories
 {
-    public class IngredientRepository : Base.BaseRepository, IIngredientRepository
+    public class IngredientRepository : BaseCookingRepository<Ingredient,int>, IIngredientRepository
     {
         public IngredientRepository(ChefBoxDbContext context) : base(context)
         {
@@ -21,9 +21,9 @@ namespace ChefBox.Cooking.Data.Repositories
         {
             try
             {
-                var ingredientEntity = GetSingleOrDefaultBaseEntity<Ingredient>(ingredientDto.Id, isValid: true);
+                var ingredientEntity = GetSingleOrDefaultBaseEntity(ingredientDto.Id,true);
                 EntityState entityState = EntityState.Modified;
-                if (ingredientEntity == null)
+                if (ingredientEntity is null)
                 {
                     ingredientEntity = new Ingredient()
                     {
@@ -50,12 +50,19 @@ namespace ChefBox.Cooking.Data.Repositories
             }
         }
 
-        public IEnumerable<RecipeFormDto> GetAllIngredientRecipes(int ingredientId)
+        public IEnumerable<RecipeDto> GetAllIngredientRecipes(int ingredientId)
         {
-            throw new NotImplementedException();
+            var idResults = Context.RecipeIngredients.Include(ri => ri.Ingredient)
+                                   .Where(ri => ri.IngredientId == ingredientId && ri.IsValid)
+                                   .Select(ri => ri.Id)
+                                   .ToArray();
+
+            var dtoResults = new RecipeRepository(Context).GetAllRecipes(idResults);
+
+            return dtoResults;
         }
 
-        public IEnumerable<IngredientDto> GetAllIngredients(string query = null)
+        public IEnumerable<IngredientDto> GetAllIngredients(string query = "")
         {
             var queryUpper = string.IsNullOrEmpty(query) ? null : query.ToUpper();
 
@@ -73,7 +80,7 @@ namespace ChefBox.Cooking.Data.Repositories
                                                 ||
                                                 ing.IngredientType.ToString().ToUpper().Contains(queryUpper)
                                             )
-                                        ).AsEnumerable();
+                                        );
 
             var dtoResults = results.Select(r => new IngredientDto()
             {
@@ -81,14 +88,48 @@ namespace ChefBox.Cooking.Data.Repositories
                 Name = r.Name,
                 Description = r.Description,
                 IngredientType = r.IngredientType,
-            });
+            }).AsEnumerable();
+
+            return dtoResults;
+        }
+
+        public IEnumerable<IngredientDetailsDto> GetAllIngredientsWithDetails(string query = "")
+        {
+            var queryUpper = string.IsNullOrEmpty(query) ? null : query.ToUpper();
+
+            var results = Context.Ingredients
+                                 .Include(i => i.RecipeIngredients)
+                                 .Where(
+                                            ing =>
+                                            ing.IsValid
+                                            &&
+                                            (
+                                                string.IsNullOrEmpty(queryUpper)
+                                                ||
+                                                ing.Name.ToUpper().Contains(queryUpper)
+                                                ||
+                                                ing.Description.ToUpper().Contains(queryUpper)
+                                                ||
+                                                ing.IngredientType.ToString().ToUpper().Contains(queryUpper)
+                                            )
+                                        );
+
+            var dtoResults = results.Select(r => new IngredientDetailsDto()
+            {
+                Id = r.Id,
+                Name = r.Name,
+                Description = r.Description,
+                IngredientType = r.IngredientType,
+                RecipesCount = r.RecipeIngredients.Count(ri => ri.IsValid),
+            }).AsEnumerable();
 
             return dtoResults;
         }
 
         public IngredientDto GetIngredient(int id)
         {
-            var result = GetSingleOrDefaultBaseEntity<Ingredient>(id, true);
+            var result = GetSingleOrDefaultBaseEntity(id, true);
+
             var dtoResult = new IngredientDto()
             {
                 Id = result.Id,
@@ -100,31 +141,24 @@ namespace ChefBox.Cooking.Data.Repositories
             return dtoResult;
         }
 
-        public int GetRecipesCount(int ingredientId)
-        {
-            var result = Context.RecipeIngredients
-                                .Count(ri => ri.IngredientId == ingredientId && ri.IsValid);
-            return result;
-        }
-
         public bool RemoveIngredient(int id)
         {
-            throw new NotImplementedException();
+            return base.Remove(id);
         }
 
         public bool RemoveIngredientPermanently(int id)
         {
-            throw new NotImplementedException();
+            return base.RemovePermanently(id);
         }
 
-        public bool RemoveRangeIngredients(params int[] ids)
+        public bool[] RemoveRangeIngredients(params int[] ids)
         {
-            throw new NotImplementedException();
+            return base.RemoveRange(ids);
         }
 
-        public bool RemoveRangeIngredientsPermanently(params int[] ids)
+        public bool[] RemoveRangeIngredientsPermanently(params int[] ids)
         {
-            throw new NotImplementedException();
+            return base.RemoveRangePermanently(ids);
         }
     }
 }

@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ChefBox.Cooking.Dto\ChefBox.Cooking.Dto.csproj" />
+    <ProjectReference Include="..\ChefBox.Model\ChefBox.Model.csproj" />
   </ItemGroup>
 
 </Project>

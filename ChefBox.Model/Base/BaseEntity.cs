@@ -8,5 +8,7 @@ namespace ChefBox.Model.Base
     {
         public TId Id { get; set; }
         public bool IsValid { get; set; } = true;
+        public DateTime CreationDate { get; set; } = DateTime.UtcNow;
+        public DateTime ModificationDate { get; set; } = DateTime.UtcNow;
     }
 }

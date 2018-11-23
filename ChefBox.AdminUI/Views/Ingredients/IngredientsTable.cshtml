@@ -1,21 +1,52 @@
 ﻿@using ChefBox.AdminUI.ViewModels.Ingredient;
 @model IngredientsTableViewModel
 
+@section Styles{
+    <link href="~/lib/Datatable/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card-group">
+            <div class="card">
+                <div class="card-body">
+                    <h5>Quick insert</h5>
+                    <form class="my-2" id="addIngredientForm">
+                        <div class="row">
+                            <div class="col-md-4 form-group">
+                                <input type="text" asp-for="IngredientForm.Name"
+                                       class="form-control mx-2"
+                                       id="ingredientName"
+                                       placeholder="Name">
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <input type="text" asp-for="IngredientForm.Description"
+                                       class="form-control mx-2"
+                                       id="ingredientDescription"
+                                       placeholder="Description">
+                            </div>
+                            <div class="col-md-3 form-group">
+                                <select asp-for="IngredientForm.IngredientType" asp-items="Html.GetEnumSelectList<IngredientType>()" class="form-control"></select>
+                            </div>
+                            <div class="col-md-1">
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-body">
                 <form class="float-right" asp-controller="Ingredients" asp-action="Index" method="get">
                     <div class="row">
-                        <div class="col-6">
-                            <div class="input-group">
-                                <input class="form-control" id="query" name="query" type="text" placeholder="Search..." />
-                                <button class="btn btn-defualt waves-effect waves-light">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="col-6">
+                        <div class="col-12">
                             <a class="btn btn-primary" asp-controller="Ingredients" asp-action="IngredientForm">
                                 <i class="fas fa-plus"></i>
                                 New ingredient
@@ -26,22 +57,20 @@
                 </form>
                 <h4 class="card-title">Ingredients</h4>
                 <h6 class="card-subtitle">Show all ingredients for all recipies</h6>
-                <div class="table-responsive">
-                    @{
-                        if (Model is null)
-                        {
-                            <div>
-                                <h3>There is No Ingredients Yet.</h3>
-                            </div>
-                        }
-                        else
-                        {
-                            <table class="table">
+                @{
+                    if (Model is null)
+                    {
+                        <div>
+                            <h3>There is No Ingredients Yet.</h3>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+
+                            <table id="ingredientsTable" class="table">
                                 <thead class="thead-light">
                                     <tr>
-                                        <th scope="col">
-                                            <input class="form-control" id="CheckAll" type="checkbox" />
-                                        </th>
                                         <th scope="col">Name</th>
                                         <th scope="col">Description</th>
                                         <th scope="col">Type</th>
@@ -50,23 +79,21 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var ingredientDetail in Model.IngredientDetails)
+                                    @foreach (var ingredient in Model.IngredientDetails)
                                     {
-                                        <tr id="@ingredientDetail.Ingredient.Id">
-                                            <td scope="col">
-                                                <input class="form-control" id="Checkbox1" type="checkbox" />
-                                            </td>
-                                            <td>@ingredientDetail.Ingredient.Name</td>
-                                            <td>@ingredientDetail.Ingredient.Description</td>
-                                            <td>@ingredientDetail.Ingredient.IngredientType</td>
-                                            <td>@ingredientDetail.RecipesCount</td>
+                                        <tr data-id="@ingredient.Id"
+                                            data-name="@ingredient.Name">
+                                            <td>@ingredient.Name</td>
+                                            <td>@ingredient.Description</td>
+                                            <td>@ingredient.IngredientType</td>
+                                            <td>@ingredient.IngredientRecipesCount</td>
                                             <td>
-                                                <a class="btn waves-effect waves-light btn-circle btn-info"
-                                                   href="~/Ingredients/IngredientForm/@(ingredientDetail.Ingredient.Id)">
+                                                <a class="btn waves-effect waves-light btn-sm btn-circle btn-info"
+                                                   asp-controller="Ingredients" asp-action="IngredientForm" asp-route-id="@(ingredient.Id)">
                                                     <i class="fa fa-edit"></i>
                                                 </a>
-                                                <a href="#" class="btn waves-effect waves-light btn-circle btn-danger">
-                                                    <i class="fa fa-window-close"></i>
+                                                <a href="#" class="btn btn-danger waves-effect waves-light btn-sm btn-circle remove-ingredient">
+                                                    <i class="fas fa-trash"></i>
                                                 </a>
                                             </td>
 
@@ -74,12 +101,18 @@
                                     }
                                 </tbody>
                             </table>
+                        </div>
 
-                        }
                     }
+                }
 
-                </div>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts{
+    <script src="~/lib/Datatable/js/jquery.dataTables.min.js"></script>
+    <script src="~/lib/Datatable/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/js/Views/Ingredients/IngredientsTable.js"></script>
+}

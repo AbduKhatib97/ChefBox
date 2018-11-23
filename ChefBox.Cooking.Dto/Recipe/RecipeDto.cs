@@ -1,8 +1,6 @@
 ﻿using ChefBox.Enum.Cooking.Enums;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace ChefBox.Cooking.Dto.Recipe
 {
@@ -14,12 +12,11 @@ namespace ChefBox.Cooking.Dto.Recipe
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
         [Required]
-        [Display(Name = "Recipe Type")]
         public RecipeType RecipeType { get; set; }
         public string Description { get; set; }
         [Required]
-        [Display(Name = "Is Published")]
         public bool IsPublished { get; set; }
+        public DateTime CreationDate { get; set; }
 
     }
 }

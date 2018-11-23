@@ -1,1 +1,115 @@
-﻿
+﻿@using ChefBox.AdminUI.ViewModels.Home
+@model IndexViewModel
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="d-flex flex-row">
+                <div class="p-10 bg-warning">
+                    <h3 class="text-white box m-b-0"><i class="fas fa-book"></i></h3>
+                </div>
+                <div class="p-10">
+                    <h3 class="text-info m-b-0">Recipes</h3>
+                    @if (Model.RecipeCard.LatestItemId != 0)
+                    {
+                        <a asp-controller="Recipes" asp-action="RecipeForm"
+                           asp-route-id="@Model.RecipeCard.LatestItemId"
+                           class="text-muted">@Model.RecipeCard.LatestItemName</a>
+                    }
+                </div>
+                <div class="align-self-center m-r-20 ml-auto">
+                    <h2 class="text-info m-b-0">@Model.RecipeCard.EntitiesCount</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="d-flex flex-row">
+                <div class="p-10 bg-success">
+                    <h3 class="text-white box m-b-0"><i class="fas fa-lemon"></i></h3>
+                </div>
+                <div class="p-10">
+                    <h3 class="text-info m-b-0">Ingredients</h3>
+                    @if (Model.IngredientCard.LatestItemId > 0)
+                    {
+                        <a asp-controller="Ingredients" asp-action="IngredientForm"
+                           asp-route-id="@Model.IngredientCard.LatestItemId"
+                           class="text-muted">@Model.IngredientCard.LatestItemName</a>
+                    }
+                </div>
+                <div class="align-self-center m-r-20 ml-auto">
+                    <h2 class="text-info m-b-0">@Model.IngredientCard.EntitiesCount</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="d-flex flex-row">
+                <div class="p-10 bg-info">
+                    <h3 class="text-white box m-b-0"><i class="fas fa-boxes"></i></h3>
+                </div>
+                <div class="p-10">
+                    <h3 class="text-info m-b-0">Categories</h3>
+                    @if (Model.CategoryCard.LatestItemId != 0)
+                    {
+                        <a asp-controller="" asp-action=""
+                           asp-route-id=""
+                           class="text-muted">@Model.CategoryCard.LatestItemName</a>
+                    }
+                </div>
+                <div class="align-self-center m-r-20 ml-auto">
+                    <h2 class="text-info m-b-0">@Model.CategoryCard.EntitiesCount</h2>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="d-flex flex-row">
+                <div class="p-10 bg-primary">
+                    <h3 class="text-white box m-b-0"><i class="fas fa-images"></i></h3>
+                </div>
+                <div class="p-10">
+                    <h3 class="text-info m-b-0">Photos</h3>
+                    @if (Model.PhotoCard.LatestItemId != 0)
+                    {
+                        <a asp-controller="" asp-action=""
+                           asp-route-id=""
+                           class="text-muted">@Model.PhotoCard.LatestItemName</a>
+                    }
+                </div>
+                <div class="align-self-center m-r-20 ml-auto">
+                    <h2 class="text-info m-b-0">@Model.PhotoCard.EntitiesCount</h2>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-9">
+        <div class="card p-4">
+            <h4 class="card-title">Quote of the day <a href="#" id="refreshQuote" class="mx-2"><i class="fas fa-sync"></i></a></h4>
+            <q class="card-text" id="quote"></q>
+            <p class="card-text font-weight-bold" id="quoteAuthor"></p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-4">
+            <h4 class="card-title">@DateTime.Today.DayOfWeek.ToString() <span class="font-14 font-normal text-muted">@DateTime.Today.ToShortDateString()</span></h4>
+            <h5 id="cityName"></h5>
+            <div class="d-flex align-items-center flex-row m-t-30">
+                <h1 class="font-light"><img id="weatherImg" src="http://openweathermap.org/img/w/04n.png" /><span><span id="temp"></span><sup>°</sup></span></h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/js/Views/Home/Index.js"></script>
+}
+

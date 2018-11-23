@@ -4,36 +4,45 @@
 
 <div class="row">
     <div class="col-12">
-        <div class="card">
+        <div class="card shadow">
             <div class="card-body">
-                <h4 class="card-title">Add new recipe</h4>
-                <form asp-controller="Recipes" asp-action="SaveForm" method="post">
+                <h3 class="card-title">Recipe Form</h3>
+                <form asp-controller="Recipes" asp-action="RecipeForm" method="post">
                     <div class="row hide">
                         <div class="col-md-12 form-group">
-                            <label asp-for="Recipe.Id"></label>
-                            <input asp-for="Recipe.Id" class="form-control" />
+                            <label asp-for="Id"></label>
+                            <input asp-for="Id" class="form-control" />
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12 form-group">
-                            <label asp-for="Recipe.Name"></label>
-                            <input asp-for="Recipe.Name" class="form-control" />
+                            <label asp-for="Name"></label>
+                            <input asp-for="Name" class="form-control" />
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6 form-group">
-                            <label asp-for="Recipe.CategoryId"></label>
-                            <select asp-for="Recipe.CategoryId" asp-items="Model.Categories" class="form-control"></select>
+                            <label asp-for="CategoryId"></label>
+
+                            <div class="row">
+                                <div class="col-md-11">
+                                    <select asp-for="CategoryId" asp-items="Model.Categories" class="form-control"></select>
+
+                                </div>
+                                <div class="col-md-*">
+                                    <a href="#" class="btn form-control" id="categoryModalCaller"><i class="fas fa-cog"></i></a>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6 form-group">
-                            <label asp-for="Recipe.RecipeType"></label>
-                            <select asp-for="Recipe.RecipeType" asp-items="Html.GetEnumSelectList<RecipeType>()" class="form-control"></select>
+                            <label asp-for="RecipeType"></label>
+                            <select asp-for="RecipeType" asp-items="Html.GetEnumSelectList<RecipeType>()" class="form-control"></select>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12 form-group">
-                            <label asp-for="Recipe.Description"></label>
-                            <textarea asp-for="Recipe.Description" class="form-control ck-editor"
+                            <label asp-for="Description"></label>
+                            <textarea asp-for="Description" class="form-control ck-editor"
                                       rows="5">
 
                             </textarea>
@@ -41,15 +50,56 @@
                     </div>
                     <div class="row">
                         <!--Ingredients-->
+                        @*<div class="form-group col-md-12">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Name</th>
+                                            <th>Unit</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (int index = 0; index < Model.RecipeIngredients.Count(); index++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input asp-for="@(Model.RecipeIngredients[index].IsChecked)" class="custom-control-input">
+                                                        <label class="custom-control-label"
+                                                               asp-for="@(Model.RecipeIngredients[index].IsChecked)">Select</label>
+                                                    </div>
+                                                    <input type="hidden" asp-for="@(Model.RecipeIngredients[index].IngredientId)" />
+
+                                                </td>
+                                                <td>
+                                                    @Model.RecipeIngredients[index].Name
+                                                </td>
+                                                <td>
+                                                    <select asp-for="@Model.RecipeIngredients[index].Unit" asp-items="Html.GetEnumSelectList<Unit>()" class="form-control"></select>
+                                                </td>
+                                                <td>
+                                                    <input asp-for="@Model.RecipeIngredients[index].Amount" class="form-control" />
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>*@
                     </div>
                     <div class="row">
                         <!--Photos-->
+                        <div class="form-group col-md-12">
+                            <label asp-for="Photos"></label>
+                            <input asp-for="Photos" type="file" class="form-control" multiple />
+                        </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-md-2">
                             <div class="custom-control custom-checkbox">
-                                <input asp-for="Recipe.IsPublished" class="custom-control-input">
-                                <label class="custom-control-label" asp-for="Recipe.IsPublished"></label>
+                                <input asp-for="IsPublished" class="custom-control-input">
+                                <label class="custom-control-label" asp-for="IsPublished"></label>
                             </div>
                         </div>
                     </div>

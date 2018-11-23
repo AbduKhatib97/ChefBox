@@ -30,7 +30,8 @@ namespace ChefBox.AdminUI
         {
             services.AddTransient<IIngredientRepository, IngredientRepository>();
             services.AddTransient<IRecipeRepository, RecipeRepository>();
-            //services.AddTransient<IPhotoRepository, PhotoRepository>();
+            services.AddTransient<IPhotoRepository, PhotoRepository>();
+            services.AddTransient<ISharedRepository, SharedRepository>();
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddDbContext<ChefBoxDbContext>(option =>
                         option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));

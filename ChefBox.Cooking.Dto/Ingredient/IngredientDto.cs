@@ -1,8 +1,5 @@
 ﻿using ChefBox.Enum.Cooking.Enums;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace ChefBox.Cooking.Dto.Ingredient
 {

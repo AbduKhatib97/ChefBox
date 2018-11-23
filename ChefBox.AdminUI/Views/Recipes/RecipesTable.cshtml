@@ -25,16 +25,16 @@
                 </form>
                 <h4 class="card-title">Recipes</h4>
                 <h6 class="card-subtitle">Show all recipies</h6>
-                <div class="table-responsive">
-                    @{
-                        if (Model is null)
-                        {
-                            <div>
-                                <h3>There is No Ingredients Yet.</h3>
-                            </div>
-                        }
-                        else
-                        {
+                @{
+                    if (Model is null)
+                    {
+                        <div>
+                            <h3>There is No Ingredients Yet.</h3>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
                             <table class="table">
                                 <thead class="thead-light">
                                     <tr>
@@ -48,21 +48,24 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+
                                     @foreach (var recipe in Model.Recipes)
                                     {
-                                        <tr id="@recipe.Recipe.Id">
+                                        <tr id="@recipe.Id">
                                             <td scope="col">
                                                 <input id="Checkbox1" type="checkbox" />
                                             </td>
-                                            <td>@recipe.Recipe.Name</td>
-                                            <td>@recipe.Recipe.CategoryName</td>
-                                            <td>@recipe.Recipe.RecipeType</td>
+                                            <td> @recipe.Name </td>
+                                            <td> @recipe.CategoryName </td>
+
+                                            <td> @recipe.RecipeType </td>
+
                                             <td class="button-group">
                                                 <button class="btn waves-effect waves-light btn-circle btn-primary"
                                                         data-toggle="popover"
                                                         title="Ingredients"
                                                         data-html="true"
-                                                        data-content="@recipe.Ingredients.ToUl()"
+                                                        data-content="@(recipe.Ingredients.ToUl())"
                                                         data-placement="left">
                                                     <i class="fa fa-eye"></i>
                                                 </button>
@@ -71,7 +74,7 @@
                                                     <i class="fa fa-box-open"></i>
                                                 </a>
                                                 <a class="btn waves-effect waves-light btn-circle btn-info"
-                                                   href="~/Recipes/RecipeForm/@(recipe.Recipe.Id)">
+                                                   asp-controller="Recipes" asp-action="RecipeForm" asp-route-id="@(recipe.Id)">
                                                     <i class="fa fa-edit"></i>
                                                 </a>
                                                 <a href="#" class="btn waves-effect waves-light btn-circle btn-danger">
@@ -83,12 +86,11 @@
                                     }
                                 </tbody>
                             </table>
-
-                        }
+                        </div>
                     }
-
-                </div>
+                }
             </div>
         </div>
     </div>
 </div>
+

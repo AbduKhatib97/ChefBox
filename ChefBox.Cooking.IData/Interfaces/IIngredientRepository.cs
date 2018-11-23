@@ -1,22 +1,21 @@
 ﻿using ChefBox.Cooking.Dto.Ingredient;
 using ChefBox.Cooking.Dto.Recipe;
-using System;
+using ChefBox.Model.Cooking;
 using System.Collections.Generic;
-using System.Text;
 
 namespace ChefBox.Cooking.IData.Interfaces
 {
     public interface IIngredientRepository
     {
-        IEnumerable<IngredientDto> GetAllIngredients(string query = null);
+        IEnumerable<IngredientDto> GetAllIngredients(string query = "");
+        IEnumerable<IngredientDetailsDto> GetAllIngredientsWithDetails(string query = "");
         IngredientDto GetIngredient(int id);
-        int GetRecipesCount(int ingredientId);
         IngredientDto ActionIngredient(IngredientDto ingredientDto);
         bool RemoveIngredient(int id);
-        bool RemoveRangeIngredients(params int[] ids);
+        bool[] RemoveRangeIngredients(params int[] ids);
         bool RemoveIngredientPermanently(int id);
-        bool RemoveRangeIngredientsPermanently(params int[] ids);
-        IEnumerable<RecipeFormDto> GetAllIngredientRecipes(int ingredientId);
+        bool[] RemoveRangeIngredientsPermanently(params int[] ids);
+        IEnumerable<RecipeDto> GetAllIngredientRecipes(int ingredientId);
 
     }
 }

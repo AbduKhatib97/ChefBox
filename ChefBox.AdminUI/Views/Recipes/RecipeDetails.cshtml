@@ -1,3 +1,85 @@
 ﻿@using ChefBox.AdminUI.ViewModels.Recipe
+@using ChefBox.AdminUI.ViewModels.Photo
 @model RecipeDetailsViewModel
 
+@{
+    string coverUrl = Model.Photos is null ? @"/images/img4.jpg" : @"/images/img4.jpg"; //TODO
+    string publishClasses = Model.IsPublished ? "text-success fas fa-eye" : "text-danger fas fa-eye-slash";
+
+}
+
+@section Styles{
+    <link href="~/lib/prism/prism.css" rel="stylesheet" />
+}
+
+<div class="row">
+    <div class="col-8">
+        <div class="card">
+            <div class="p-4">
+                <div class="d-flex no-block align-items-center my-4">
+                    <h2 class="card-title">@Model.Name</h2>
+                    <h4 class="card-subTitle ml-auto">@Model.RecipeType</h4>
+                </div>
+                @if (Model.Photos.Count() == 0)
+                {
+                    <h4>There is no Photos</h4>
+                }
+                else
+                {
+                    <div id="recipeCarousel" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner" role="listbox">
+                            @{PhotoViewModel currentPhoto; }
+                            @for (int i = 0; i < Model.Photos.Count(); i++)
+                            {
+                                @(currentPhoto = Model.Photos.ElementAt(i))
+                                <div class="item @(i == 0 ? "active" : "")">
+                                    <img src="@currentPhoto.Url" alt="@currentPhoto.Name">
+                                </div>
+                            }
+                        </div>
+                        <a class="carousel-control-prev" href="#recipeCarousel" role="button" data-slide="prev"> <span class="carousel-control-prev-icon" aria-hidden="true"></span> <span class="sr-only">Previous</span> </a>
+                        <a class="carousel-control-next" href="#recipeCarousel" role="button" data-slide="next"> <span class="carousel-control-next-icon" aria-hidden="true"></span> <span class="sr-only">Next</span> </a>
+                    </div>
+
+                }
+
+                <div class="card-body">
+                    @Model.Description
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="card">
+            <div class="p-4">
+
+                <h2>Ingredients</h2>
+                @if (Model.Ingredients.Count() == 0)
+                {
+                    <h4>There Is no Ingredients Yet !</h4>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table id="IngredientsTable" class="table">
+                            <tbody>
+                                @foreach (var ingredient in Model.Ingredients)
+                                {
+                                    <tr>
+                                        <td>@ingredient.IngredientName</td>
+                                        <td>@ingredient.Amount</td>
+                                        <td>@ingredient.Unit</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/lib/prism/prism.js"></script>
+}

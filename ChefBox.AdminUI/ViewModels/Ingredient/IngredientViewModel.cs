@@ -1,9 +1,10 @@
-﻿using ChefBox.Enum.Cooking.Enums;
+﻿using ChefBox.AdminUI.ViewModels.Base;
+using ChefBox.Enum.Cooking.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace ChefBox.AdminUI.ViewModels.Ingredient
 {
-    public class IngredientViewModel
+    public class IngredientViewModel : SharedViewModel
     {
         public int Id { get; set; }
         [Required]

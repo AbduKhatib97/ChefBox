@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="bootstrap" Version="4.1.3" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.8.10" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.4" />
@@ -20,11 +21,13 @@
   <ItemGroup>
     <ProjectReference Include="..\ChefBox.Cooking.Data\ChefBox.Cooking.Data.csproj" />
     <ProjectReference Include="..\ChefBox.Cooking.IData\ChefBox.Cooking.IData.csproj" />
+    <ProjectReference Include="..\ChefBox.ServiceExample\ChefBox.ServiceExample.csproj" />
     <ProjectReference Include="..\ChefBox.SqlServer\ChefBox.SqlServer.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Views\Home\" />
+    <Folder Include="wwwroot\recipeImages\" />
   </ItemGroup>
 
 </Project>

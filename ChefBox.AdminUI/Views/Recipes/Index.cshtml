@@ -1,0 +1,64 @@
+﻿@using ChefBox.AdminUI.ViewModels.Recipe
+@model IndexViewModel;
+
+@{
+}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12 my-2 ">
+                        <div class="float-right">
+                            <form asp-controller="Recipes" asp-action="Index" method="get">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <input class="form-control" id="query" name="query" type="text" placeholder="Search..." />
+                                            <button class="btn btn-defualt waves-effect waves-light">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a class="btn btn-primary waves-effect waves-light"
+                                           asp-controller="Recipes" asp-action="RecipeForm">
+                                            <i class="fas fa-plus"></i>
+                                            New recipe
+                                        </a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="Page-header">
+                            <h2 class="card-title">Recipes</h2>
+                            <h6 class="card-subtitle">Show all recipies</h6>
+                        </div>                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        @{
+                            if (Model is null)
+                            {
+                                <div>
+                                    <h3>There is No Ingredients Yet.</h3>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="row">
+                                    @foreach (var recipeCard in Model.RecipesCards)
+                                    {
+                                        <div class="col-md-4">
+                                            <partial name="~/Views/Recipes/Partials/RecipeCard.cshtml" model="recipeCard" />
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

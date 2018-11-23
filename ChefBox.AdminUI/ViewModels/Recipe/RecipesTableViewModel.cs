@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using ChefBox.AdminUI.ViewModels.Base;
+using System.Collections.Generic;
 
 namespace ChefBox.AdminUI.ViewModels.Recipe
 {
-    public class RecipesTableViewModel
+    public class RecipesTableViewModel : SharedViewModel
     {
-        public List<RecipeDetailsViewModel> Recipes { get; set; }
+        public IEnumerable<RecipeDetailsViewModel> Recipes { get; set; }
     }
 }

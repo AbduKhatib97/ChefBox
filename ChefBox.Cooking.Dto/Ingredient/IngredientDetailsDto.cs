@@ -4,9 +4,8 @@ using System.Text;
 
 namespace ChefBox.Cooking.Dto.Ingredient
 {
-    public class IngredientDetailsDto
+    public class IngredientDetailsDto : IngredientDto
     {
-        public IngredientDto Ingredient { get; set; }
         public int RecipesCount { get; set; }
     }
 }
